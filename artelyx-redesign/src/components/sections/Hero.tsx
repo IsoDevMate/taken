@@ -1,8 +1,10 @@
 import { useRef, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { ArrowRight, Upload } from 'lucide-react'
 import gsap from 'gsap'
 import { Button } from '@/components/ui/button'
+import { SectionLabel } from '@/components/ui/SectionLabel'
 import { images } from '@/lib/images'
 
 export function Hero() {
@@ -58,14 +60,13 @@ export function Hero() {
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-24 pt-32 lg:px-8 lg:pb-32">
         <div className="max-w-3xl">
-          <motion.p
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="mb-6 text-xs font-medium uppercase tracking-[0.3em] text-accent-light"
           >
-            Premium Metal Wall Art
-          </motion.p>
+            <SectionLabel className="mb-6">Premium Metal Wall Art</SectionLabel>
+          </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
@@ -93,17 +94,15 @@ export function Hero() {
             transition={{ delay: 1, duration: 0.8 }}
             className="mt-10 flex flex-wrap items-center gap-4"
           >
-            <Button size="lg" className="group uppercase tracking-wider">
-              <Upload className="h-4 w-4" />
-              Upload My Photo
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            <Button variant="primary" size="lg" className="group" asChild>
+              <Link to="/studio">
+                <Upload className="h-4 w-4" />
+                Upload My Photo
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
             </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="uppercase tracking-wider"
-            >
-              Browse Gallery
+            <Button variant="outline" size="lg" asChild>
+              <Link to="/gallery">Browse Gallery</Link>
             </Button>
           </motion.div>
         </div>

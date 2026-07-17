@@ -1,0 +1,176 @@
+import { useState, useCallback } from 'react'
+import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { Upload, Crop, Eye, ArrowRight, ImagePlus } from 'lucide-react'
+import { SectionLabel } from '@/components/ui/SectionLabel'
+import { Reveal } from '@/components/ui/Reveal'
+import { Button } from '@/components/ui/button'
+import { images } from '@/lib/images'
+import { cn } from '@/lib/utils'
+
+type StudioStep = 'upload' | 'crop' | 'preview'
+
+export function StudioPage() {
+  const [step, setStep] = useState<StudioStep>('upload')
+  const [preview, setPreview] = useState<string | null>(null)
+
+  const handleUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const url = URL.createObjectURL(file)
+    setPreview(url)
+    setStep('crop')
+  }, [])
+
+  return (
+    <div className="min-h-screen bg-ink pt-28">
+      <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-32">
+        <Reveal>
+          <SectionLabel>Studio</SectionLabel>
+          <h1 className="mt-6 font-display text-5xl leading-[1.05] text-cream md:text-6xl">
+            Your photo.{' '}
+            <span className="italic text-accent-light">Our craft.</span>
+          </h1>
+          <p className="mt-6 max-w-lg text-cream/45">
+            Upload, crop, and preview your metal print before ordering.
+          </p>
+        </Reveal>
+
+        <div className="mt-16 flex gap-2">
+          {(['upload', 'crop', 'preview'] as const).map((s, i) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => preview && setStep(s)}
+              className={cn(
+                'relative px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-all duration-500',
+                step === s
+                  ? 'text-cream'
+                  : 'text-cream/30 hover:text-cream/60'
+              )}
+            >
+              {step === s && (
+                <motion.div
+                  layoutId="studio-tab"
+                  className="absolute inset-0 glass-strong"
+                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                />
+              )}
+              <span className="relative">
+                0{i + 1} {s}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-12 grid gap-12 lg:grid-cols-2 lg:gap-20">
+          <Reveal index={1} className="relative">
+            {step === 'upload' && (
+              <label className="group flex aspect-[4/5] cursor-pointer flex-col items-center justify-center border border-dashed border-white/15 transition-all duration-500 hover:border-accent/40 hover:bg-white/[0.02]">
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleUpload}
+                />
+                <div className="flex h-16 w-16 items-center justify-center border border-white/10 transition-colors group-hover:border-accent/40">
+                  <ImagePlus className="h-6 w-6 text-cream/40 group-hover:text-accent-light" />
+                </div>
+                <p className="mt-6 font-display text-2xl text-cream">
+                  Drop your photo
+                </p>
+                <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.2em] text-cream/30">
+                  JPG, PNG — min 2000px
+                </p>
+              </label>
+            )}
+
+            {step === 'crop' && preview && (
+              <div className="relative aspect-[4/5] overflow-hidden bg-graphite">
+                <img
+                  src={preview}
+                  alt="Your upload"
+                  className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-8 border border-accent/30" />
+              </div>
+            )}
+
+            {step === 'preview' && (
+              <div className="relative aspect-[4/5] overflow-hidden">
+                <img
+                  src={preview ?? images.hero}
+                  alt="Room preview"
+                  className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/60 to-transparent" />
+                <p className="absolute bottom-6 left-6 font-mono text-[11px] uppercase tracking-[0.2em] text-cream/50">
+                  Living room preview
+                </p>
+              </div>
+            )}
+          </Reveal>
+
+          <Reveal index={2} className="flex flex-col justify-center">
+            {step === 'upload' && (
+              <>
+                <Upload className="h-8 w-8 text-accent-light" />
+                <h2 className="mt-6 font-display text-3xl text-cream">
+                  Start with your best photo
+                </h2>
+                <p className="mt-4 leading-relaxed text-cream/45">
+                  We analyse resolution, orientation, and composition to
+                  recommend the perfect print size for your image.
+                </p>
+              </>
+            )}
+
+            {step === 'crop' && (
+              <>
+                <Crop className="h-8 w-8 text-accent-light" />
+                <h2 className="mt-6 font-display text-3xl text-cream">
+                  Refine the framing
+                </h2>
+                <p className="mt-4 leading-relaxed text-cream/45">
+                  Drag to reposition. The crop guide shows exactly how your
+                  image will appear on metal.
+                </p>
+                <Button
+                  className="mt-8 w-fit"
+                  onClick={() => setStep('preview')}
+                >
+                  Preview in Room
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </>
+            )}
+
+            {step === 'preview' && (
+              <>
+                <Eye className="h-8 w-8 text-accent-light" />
+                <h2 className="mt-6 font-display text-3xl text-cream">
+                  See it on your wall
+                </h2>
+                <p className="mt-4 leading-relaxed text-cream/45">
+                  Preview how your print will look in a real space before
+                  committing to a size and finish.
+                </p>
+                <div className="mt-10 flex flex-wrap gap-4">
+                  <Button variant="primary" asChild>
+                    <Link to="/pricing">
+                      Choose Size & Order
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button variant="outline" onClick={() => setStep('crop')}>
+                    Adjust Crop
+                  </Button>
+                </div>
+              </>
+            )}
+          </Reveal>
+        </div>
+      </div>
+    </div>
+  )
+}

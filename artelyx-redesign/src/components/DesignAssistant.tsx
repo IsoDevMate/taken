@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, X, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -83,7 +84,7 @@ export function DesignAssistant() {
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ delay: 2 }}
             onClick={open}
-            className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-accent px-5 py-3 text-sm font-medium text-cream shadow-2xl transition-transform hover:scale-105"
+            className="fixed bottom-6 right-6 z-50 flex items-center gap-2 glass-strong px-5 py-3.5 text-sm font-medium text-cream shadow-2xl transition-transform hover:scale-[1.02]"
           >
             <Sparkles className="h-4 w-4" />
             Need help choosing?
@@ -97,7 +98,7 @@ export function DesignAssistant() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 right-6 z-50 w-[340px] overflow-hidden border border-white/10 bg-charcoal shadow-2xl"
+            className="fixed bottom-6 right-6 z-50 w-[340px] overflow-hidden glass-strong shadow-2xl"
           >
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
               <div className="flex items-center gap-2">
@@ -193,8 +194,8 @@ export function DesignAssistant() {
                     </div>
                   </div>
                   <div className="mt-5 flex gap-2">
-                    <Button size="sm" className="flex-1 uppercase tracking-wider">
-                      Upload Photo
+                    <Button size="sm" variant="primary" className="flex-1" asChild>
+                      <Link to="/studio">Upload Photo</Link>
                     </Button>
                     <Button
                       variant="ghost"

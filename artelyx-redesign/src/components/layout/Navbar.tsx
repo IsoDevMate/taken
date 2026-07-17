@@ -1,24 +1,31 @@
-import { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 const navLinks = [
-  { label: 'Gallery', href: '#gallery' },
-  { label: 'Process', href: '#process' },
-  { label: 'About', href: '#about' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'How It Works', href: '/how-it-works' },
+  { label: 'Materials', href: '/materials' },
+  { label: 'Pricing', href: '/pricing' },
 ]
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const location = useLocation()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [location.pathname])
 
   return (
     <>
@@ -29,44 +36,49 @@ export function Navbar() {
         className={cn(
           'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
           scrolled
-            ? 'bg-ink/80 backdrop-blur-xl border-b border-white/5 py-3'
+            ? 'border-b border-white/5 bg-ink/85 py-3 backdrop-blur-2xl'
             : 'bg-transparent py-6'
         )}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 lg:px-8">
-          <a href="#" className="group flex items-center gap-3">
-            <div className="relative flex h-9 w-9 items-center justify-center border border-cream/40">
-              <div className="h-3 w-3 rotate-45 border border-cream/60" />
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 lg:px-10">
+          <Link to="/" className="group flex items-center gap-3">
+            <div className="relative flex h-9 w-9 items-center justify-center border border-cream/30 transition-colors group-hover:border-accent/50">
+              <div className="h-3 w-3 rotate-45 border border-cream/50 transition-colors group-hover:border-accent-light" />
             </div>
-            <span className="font-serif text-xl tracking-[0.2em] text-cream">
+            <span className="font-display text-xl tracking-[0.25em] text-cream">
               ARTELYX
             </span>
-          </a>
+          </Link>
 
-          <nav className="hidden items-center gap-8 md:flex">
+          <nav className="hidden items-center gap-10 md:flex">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.href}
-                href={link.href}
-                className="text-xs font-medium uppercase tracking-[0.15em] text-cream/60 transition-colors hover:text-cream"
+                to={link.href}
+                className={cn(
+                  'font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-300',
+                  location.pathname === link.href
+                    ? 'text-cream'
+                    : 'text-cream/45 hover:text-cream'
+                )}
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
           <div className="hidden items-center gap-3 md:flex">
-            <Button variant="ghost" size="sm" className="uppercase tracking-wider">
-              Sign In
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/account">Account</Link>
             </Button>
-            <Button size="sm" className="uppercase tracking-wider">
-              Upload Photo
+            <Button variant="primary" size="sm" asChild>
+              <Link to="/studio">Start Creating</Link>
             </Button>
           </div>
 
           <button
             type="button"
-            className="md:hidden text-cream"
+            className="text-cream md:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
@@ -78,24 +90,35 @@ export function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-ink/95 backdrop-blur-xl md:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-10 bg-ink/97 backdrop-blur-2xl md:hidden"
           >
-            {navLinks.map((link) => (
-              <a
+            {navLinks.map((link, i) => (
+              <motion.div
                 key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className="font-serif text-3xl text-cream"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08 }}
               >
-                {link.label}
-              </a>
+                <Link
+                  to={link.href}
+                  className="font-display text-4xl text-cream"
+                >
+                  {link.label}
+                </Link>
+              </motion.div>
             ))}
-            <Button size="lg" className="mt-4 uppercase tracking-wider">
-              Upload Photo
-            </Button>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <Button variant="primary" size="lg" asChild>
+                <Link to="/studio">Start Creating</Link>
+              </Button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

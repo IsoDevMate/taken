@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Upload, Crop, Eye, Check, Sparkles } from 'lucide-react'
 import { processSteps } from '@/lib/images'
 import { images } from '@/lib/images'
+import { SectionLabel } from '@/components/ui/SectionLabel'
 import { cn } from '@/lib/utils'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -45,20 +46,18 @@ export function ProcessWalkthrough() {
     <section
       ref={sectionRef}
       id="process"
-      className="relative min-h-screen bg-cream text-ink"
+      className="relative min-h-screen bg-warm"
     >
-      <div className="mx-auto flex min-h-screen max-w-7xl items-center gap-12 px-6 py-24 lg:px-8">
+      <div className="mx-auto flex min-h-screen max-w-7xl items-center gap-12 px-6 py-24 lg:px-10">
         <div className="flex-1">
-          <p className="text-xs font-medium uppercase tracking-[0.3em] text-accent">
-            Custom Print Experience
-          </p>
-          <h2 className="mt-4 font-serif text-4xl leading-tight md:text-5xl lg:text-6xl">
+          <SectionLabel>Custom Print Experience</SectionLabel>
+          <h2 className="mt-6 font-display text-4xl leading-tight text-cream md:text-5xl lg:text-6xl">
             As easy as
             <br />
-            <span className="italic">drag and drop.</span>
+            <span className="italic text-accent-light">drag and drop.</span>
           </h2>
 
-          <div className="mt-12 space-y-0">
+          <div className="mt-16 space-y-0">
             {processSteps.map((step, i) => {
               const Icon = icons[step.icon as keyof typeof icons]
               const isActive = i === activeStep
@@ -68,32 +67,36 @@ export function ProcessWalkthrough() {
                 <motion.div
                   key={step.step}
                   className={cn(
-                    'border-l-2 py-6 pl-8 transition-all duration-500',
+                    'border-l border-white/10 py-7 pl-8 transition-all duration-500',
                     isActive
-                      ? 'border-accent opacity-100'
+                      ? 'border-accent/60 opacity-100'
                       : isPast
-                        ? 'border-accent/30 opacity-50'
-                        : 'border-ink/10 opacity-30'
+                        ? 'border-accent/20 opacity-50'
+                        : 'opacity-25'
                   )}
                 >
                   <div className="flex items-start gap-4">
                     <div
                       className={cn(
                         'flex h-10 w-10 shrink-0 items-center justify-center transition-colors duration-500',
-                        isActive ? 'bg-accent text-cream' : 'bg-ink/5 text-ink/40'
+                        isActive
+                          ? 'bg-accent text-ink'
+                          : 'border border-white/10 text-cream/30'
                       )}
                     >
                       <Icon className="h-4 w-4" />
                     </div>
                     <div>
-                      <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-accent">
+                      <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent-light">
                         Step {step.step}
                       </span>
-                      <h3 className="mt-1 font-serif text-2xl">{step.title}</h3>
+                      <h3 className="mt-1 font-display text-2xl text-cream">
+                        {step.title}
+                      </h3>
                       <p
                         className={cn(
                           'mt-2 max-w-md text-sm leading-relaxed transition-all duration-500',
-                          isActive ? 'text-ink/70' : 'text-ink/40'
+                          isActive ? 'text-cream/60' : 'text-cream/25'
                         )}
                       >
                         {step.description}
@@ -108,19 +111,21 @@ export function ProcessWalkthrough() {
 
         <div className="relative hidden flex-1 items-center justify-center lg:flex">
           <div className="relative">
-            <div className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-accent/20 to-transparent blur-2xl" />
+            <div className="absolute -inset-4 bg-gradient-to-br from-accent/10 to-transparent blur-2xl" />
             <motion.div
               key={activeStep}
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="relative w-72 overflow-hidden rounded-[2rem] border-4 border-ink/10 bg-ink shadow-2xl"
+              className="relative w-72 overflow-hidden border border-white/10 bg-ink shadow-2xl"
             >
-              <div className="flex items-center justify-between bg-ink px-4 py-2">
-                <span className="text-[10px] text-cream/40">Artelyx Preview</span>
+              <div className="flex items-center justify-between bg-charcoal px-4 py-2">
+                <span className="font-mono text-[10px] text-cream/40">
+                  Artelyx Preview
+                </span>
                 <div className="flex gap-1">
-                  <div className="h-2 w-2 rounded-full bg-cream/20" />
-                  <div className="h-2 w-2 rounded-full bg-cream/20" />
+                  <div className="h-2 w-2 rounded-full bg-cream/15" />
+                  <div className="h-2 w-2 rounded-full bg-cream/15" />
                 </div>
               </div>
 
@@ -143,16 +148,16 @@ export function ProcessWalkthrough() {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="absolute inset-x-4 bottom-4 space-y-2 rounded-lg bg-ink/90 p-4 backdrop-blur-sm"
+                    className="absolute inset-x-4 bottom-4 space-y-2 glass p-4"
                   >
-                    <div className="flex items-center gap-2 text-xs text-green-400">
+                    <div className="flex items-center gap-2 font-mono text-[10px] text-accent-light">
                       <Sparkles className="h-3 w-3" />
                       Resolution: Excellent
                     </div>
-                    <div className="text-xs text-cream/60">
+                    <div className="font-mono text-[10px] text-cream/50">
                       Best orientation: Portrait
                     </div>
-                    <div className="text-xs text-cream/60">
+                    <div className="font-mono text-[10px] text-cream/50">
                       Recommended: 60 × 90 cm
                     </div>
                   </motion.div>
@@ -164,10 +169,10 @@ export function ProcessWalkthrough() {
                       <span
                         key={room}
                         className={cn(
-                          'flex-1 py-1.5 text-center text-[9px] uppercase tracking-wider',
+                          'flex-1 py-1.5 text-center font-mono text-[9px] uppercase tracking-wider',
                           i === 0 && activeStep === 2
-                            ? 'bg-cream text-ink'
-                            : 'bg-ink/60 text-cream/60'
+                            ? 'bg-accent text-ink'
+                            : 'bg-ink/60 text-cream/50'
                         )}
                       >
                         {room}
@@ -183,7 +188,7 @@ export function ProcessWalkthrough() {
               transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
               className="absolute -right-6 -top-6 flex h-16 w-16 items-center justify-center"
             >
-              <ActiveIcon className="h-6 w-6 text-accent" />
+              <ActiveIcon className="h-6 w-6 text-accent-light" />
             </motion.div>
           </div>
         </div>

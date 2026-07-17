@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
+import { SectionLabel } from '@/components/ui/SectionLabel'
 import { images } from '@/lib/images'
 
 export function About() {
@@ -29,9 +30,7 @@ export function About() {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="text-xs font-medium uppercase tracking-[0.3em] text-accent-light">
-              About Artelyx
-            </p>
+            <SectionLabel>About Artelyx</SectionLabel>
             <h2 className="mt-4 font-serif text-4xl leading-tight text-cream md:text-5xl">
               Built for
               <br />

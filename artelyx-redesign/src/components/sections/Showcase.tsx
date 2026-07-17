@@ -1,6 +1,9 @@
 import { useRef, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { ArrowUpRight } from 'lucide-react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { SectionLabel } from '@/components/ui/SectionLabel'
 import { showcaseProducts } from '@/lib/images'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -42,18 +45,23 @@ export function Showcase() {
     >
       <div className="absolute left-0 top-0 z-10 flex h-full w-1/3 items-center bg-gradient-to-r from-charcoal via-charcoal/90 to-transparent px-6 lg:px-16">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.3em] text-accent-light">
-            Collection
-          </p>
+          <SectionLabel>Collection</SectionLabel>
           <h2 className="mt-4 font-serif text-4xl leading-tight text-cream md:text-5xl lg:text-6xl">
             Framed by
             <br />
             <span className="italic">light itself.</span>
           </h2>
-          <p className="mt-6 max-w-xs text-sm leading-relaxed text-cream/50">
+          <p className="mt-6 max-w-xs text-sm leading-relaxed text-cream/45">
             Each piece is printed on premium aluminium with a luminous,
             frameless finish that catches every ray of light.
           </p>
+          <Link
+            to="/gallery"
+            className="group mt-8 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-accent-light transition-colors hover:text-cream"
+          >
+            View Full Gallery
+            <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </Link>
         </div>
       </div>
 

@@ -1,32 +1,30 @@
-import { Navbar } from '@/components/layout/Navbar'
-import { Footer } from '@/components/layout/Footer'
-import { Hero } from '@/components/sections/Hero'
-import { Showcase } from '@/components/sections/Showcase'
-import { ProcessWalkthrough } from '@/components/sections/ProcessWalkthrough'
-import { Gallery } from '@/components/sections/Gallery'
-import { BeforeAfter } from '@/components/sections/BeforeAfter'
-import { About } from '@/components/sections/About'
-import { Testimonials } from '@/components/sections/Testimonials'
-import { CTA } from '@/components/sections/CTA'
-import { DesignAssistant } from '@/components/DesignAssistant'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { RootLayout } from '@/components/layout/RootLayout'
+import { HomePage } from '@/pages/HomePage'
+import { GalleryPage } from '@/pages/GalleryPage'
+import { StudioPage } from '@/pages/StudioPage'
+import { HowItWorksPage } from '@/pages/HowItWorksPage'
+import { MaterialsPage } from '@/pages/MaterialsPage'
+import { PricingPage } from '@/pages/PricingPage'
+import { AccountPage } from '@/pages/AccountPage'
+import { ContactPage } from '@/pages/ContactPage'
 
 function App() {
   return (
-    <>
-      <Navbar />
-      <main>
-        <Hero />
-        <Showcase />
-        <ProcessWalkthrough />
-        <Gallery />
-        <BeforeAfter />
-        <About />
-        <Testimonials />
-        <CTA />
-      </main>
-      <Footer />
-      <DesignAssistant />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<RootLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="gallery" element={<GalleryPage />} />
+          <Route path="studio" element={<StudioPage />} />
+          <Route path="how-it-works" element={<HowItWorksPage />} />
+          <Route path="materials" element={<MaterialsPage />} />
+          <Route path="pricing" element={<PricingPage />} />
+          <Route path="account" element={<AccountPage />} />
+          <Route path="contact" element={<ContactPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 

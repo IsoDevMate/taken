@@ -1,5 +1,6 @@
 import { useRef, useState, useCallback } from 'react'
 import { motion, useInView } from 'framer-motion'
+import { SectionLabel } from '@/components/ui/SectionLabel'
 import { images } from '@/lib/images'
 
 export function BeforeAfter() {
@@ -31,17 +32,15 @@ export function BeforeAfter() {
   const handlePointerUp = () => setIsDragging(false)
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-charcoal py-24 lg:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section ref={ref} className="relative overflow-hidden bg-graphite section-padding">
+      <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="text-xs font-medium uppercase tracking-[0.3em] text-accent-light">
-              Before & After
-            </p>
+            <SectionLabel>Before & After</SectionLabel>
             <h2 className="mt-4 font-serif text-4xl leading-tight text-cream md:text-5xl">
               From photo to
               <br />
