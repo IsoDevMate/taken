@@ -7,6 +7,7 @@ import { processSteps } from '@/lib/images'
 import { images } from '@/lib/images'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { cn } from '@/lib/utils'
+import { useIsMobile } from '@/hooks/useMediaQuery'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -15,8 +16,11 @@ const icons = { upload: Upload, crop: Crop, eye: Eye, check: Check }
 export function ProcessWalkthrough() {
   const sectionRef = useRef<HTMLElement>(null)
   const [activeStep, setActiveStep] = useState(0)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
+    if (isMobile) return
+
     const section = sectionRef.current
     if (!section) return
 
@@ -38,23 +42,53 @@ export function ProcessWalkthrough() {
     }, section)
 
     return () => ctx.revert()
-  }, [])
+  }, [isMobile])
 
   const ActiveIcon = icons[processSteps[activeStep].icon as keyof typeof icons]
 
+  if (isMobile) {
+    return (
+      <section id="process" className="bg-warm py-20">
+        <div className="mx-auto max-w-7xl px-6">
+          <SectionLabel>The Restoration Process</SectionLabel>
+          <h2 className="mt-6 font-display text-3xl text-cream">
+            How we restore your memories.
+          </h2>
+          <div className="mt-10 space-y-8">
+            {processSteps.map((step) => {
+              const Icon = icons[step.icon as keyof typeof icons]
+              return (
+                <div key={step.step} className="flex gap-5 border-t border-white/10 pt-8">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-accent/40">
+                    <Icon className="h-4 w-4 text-accent-light" />
+                  </div>
+                  <div>
+                    <span className="font-mono text-[11px] text-accent-light">
+                      Step {step.step}
+                    </span>
+                    <h3 className="mt-1 font-display text-xl text-cream">{step.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-cream/45">
+                      {step.description}
+                    </p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   return (
-    <section
-      ref={sectionRef}
-      id="process"
-      className="relative min-h-screen bg-warm"
-    >
+    <section ref={sectionRef} id="process" className="relative min-h-screen bg-warm">
       <div className="mx-auto flex min-h-screen max-w-7xl items-center gap-12 px-6 py-24 lg:px-10">
         <div className="flex-1">
           <SectionLabel>Custom Print Experience</SectionLabel>
           <h2 className="mt-6 font-display text-4xl leading-tight text-cream md:text-5xl lg:text-6xl">
-            As easy as
+            As careful as
             <br />
-            <span className="italic text-accent-light">drag and drop.</span>
+            <span className="italic text-accent-light">your memories deserve.</span>
           </h2>
 
           <div className="mt-16 space-y-0">

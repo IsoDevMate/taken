@@ -9,7 +9,7 @@ export function Testimonials() {
   const isInView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-stone section-padding">
+    <section ref={ref} className="relative overflow-hidden bg-stone py-20 md:section-padding">
       <div className="absolute inset-0 opacity-[0.02]">
         <p className="animate-marquee whitespace-nowrap font-display text-[20vw] leading-none text-cream">
           Gallery Quality &nbsp;&nbsp; Metal Prints &nbsp;&nbsp; Artelyx &nbsp;&nbsp;
@@ -25,7 +25,7 @@ export function Testimonials() {
           </h2>
         </div>
 
-        <div className="mt-20 grid gap-8 md:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:mt-20 md:grid-cols-3 md:gap-8">
           {testimonials.map((t, i) => (
             <motion.div
               key={t.author}
@@ -37,7 +37,7 @@ export function Testimonials() {
                 ease: [0.22, 1, 0.36, 1],
               }}
               whileHover={{ y: -6, transition: { duration: 0.3 } }}
-              className="glass p-10 lg:p-12"
+              className="glass p-7 md:p-10 lg:p-12"
             >
               <div className="flex gap-0.5">
                 {Array.from({ length: t.rating }).map((_, j) => (

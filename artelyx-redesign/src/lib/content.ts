@@ -59,19 +59,23 @@ export const materialFeatures = [
 
 export const faqs = [
   {
-    q: 'What resolution does my photo need?',
-    a: 'We recommend at least 300 DPI at your chosen print size. Our studio tool checks this automatically when you upload.',
+    q: 'How long does restoration take?',
+    a: 'Most restorations are completed within 5–7 business days. Complex damage may take slightly longer — we will always confirm the timeline before starting.',
   },
   {
-    q: 'How long does delivery take?',
-    a: 'Standard orders ship within 5–7 business days. Express delivery is available in Nairobi within 48 hours.',
+    q: 'Can you repair torn or heavily damaged photos?',
+    a: 'Yes. We regularly restore torn, water-damaged, and heavily faded photographs. Send us what you have — even a phone photo of the original — and we will assess what is possible.',
   },
   {
-    q: 'Can I preview before ordering?',
-    a: 'Yes. Our studio lets you crop, refine, and preview your print in a room mockup before checkout.',
+    q: 'What if I only have a phone photo of the original?',
+    a: 'That is more common than you might think. Send us the best image you have via upload or WhatsApp. We will evaluate quality and advise on what restoration can achieve.',
   },
   {
-    q: 'What finishes are available?',
-    a: 'Choose between a matte finish for subtle elegance or a gloss finish for maximum vibrancy and depth.',
+    q: 'What sizes and finishes do you offer?',
+    a: 'Sizes range from 30 × 45 cm to 90 × 120 cm. Choose matte for subtle elegance or gloss for maximum vibrancy. All prints include float-mount hardware.',
+  },
+  {
+    q: 'Do you ship outside Nairobi?',
+    a: 'Yes — we ship nationwide across Kenya. Free delivery within Nairobi. Secure packaging ensures your print arrives safely.',
   },
 ] as const

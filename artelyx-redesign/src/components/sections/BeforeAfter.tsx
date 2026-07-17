@@ -32,24 +32,23 @@ export function BeforeAfter() {
   const handlePointerUp = () => setIsDragging(false)
 
   return (
-    <section ref={ref} className="relative overflow-hidden bg-graphite section-padding">
+    <section ref={ref} id="before-after" className="relative overflow-hidden bg-graphite py-20 md:section-padding">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
             <SectionLabel>Before & After</SectionLabel>
-            <h2 className="mt-4 font-serif text-4xl leading-tight text-cream md:text-5xl">
-              From photo to
+            <h2 className="mt-4 font-display text-3xl leading-tight text-cream sm:text-4xl md:text-5xl">
+              Drag to see the
               <br />
-              <span className="italic">masterpiece.</span>
+              <span className="italic text-accent-light">transformation.</span>
             </h2>
-            <p className="mt-6 max-w-md text-sm leading-relaxed text-cream/50">
-              Drag the slider to see the transformation. Your everyday photo
-              becomes a luminous metal print with depth, clarity, and a finish
-              that catches every ray of light.
+            <p className="mt-5 max-w-md text-sm leading-relaxed text-cream/45 sm:mt-6">
+              Every faded photograph holds a story. Drag the slider to see how
+              we restore detail and print it as luminous metallic art.
             </p>
 
             <div className="mt-10 flex gap-8">
@@ -74,7 +73,7 @@ export function BeforeAfter() {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             ref={containerRef}
-            className="relative aspect-[4/5] cursor-ew-resize select-none overflow-hidden md:aspect-[3/4]"
+            className="relative aspect-[4/5] cursor-ew-resize select-none overflow-hidden touch-none md:aspect-[3/4]"
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
@@ -104,7 +103,7 @@ export function BeforeAfter() {
               className="absolute top-0 bottom-0 z-10 w-0.5 bg-cream shadow-lg"
               style={{ left: `${sliderPos}%` }}
             >
-              <div className="absolute top-1/2 left-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-cream bg-ink shadow-xl">
+              <div className="absolute top-1/2 left-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center border-2 border-cream bg-ink shadow-xl md:h-10 md:w-10">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path d="M5 4L1 8L5 12" stroke="currentColor" strokeWidth="1.5" className="text-cream" />
                   <path d="M11 4L15 8L11 12" stroke="currentColor" strokeWidth="1.5" className="text-cream" />

@@ -34,6 +34,20 @@
     scroll-behavior: smooth;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
   body {
     @apply bg-ink text-cream antialiased;
     font-family: var(--font-sans);
@@ -67,7 +81,7 @@
   }
 
   .section-padding {
-    @apply py-32 lg:py-44;
+    @apply py-20 md:py-32 lg:py-44;
   }
 
   .glass {

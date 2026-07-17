@@ -62,26 +62,30 @@ export const showcaseProducts = [
 export const processSteps = [
   {
     step: '01',
-    title: 'Upload',
-    description: 'Drop your photo. We analyse resolution, orientation, and recommend the perfect size.',
+    title: 'Send us your photograph',
+    description:
+      'Upload a scan or photo of your old image — even phone photos of faded originals work. We assess every detail.',
     icon: 'upload',
   },
   {
     step: '02',
-    title: 'Crop & Refine',
-    description: 'Fine-tune framing with our smart crop tool. See your image perfectly positioned.',
+    title: 'We restore every detail',
+    description:
+      'Our artists repair fading, scratches, tears, and damage by hand. Nothing is automated — every restoration is personal.',
     icon: 'crop',
   },
   {
     step: '03',
-    title: 'Preview in Room',
-    description: 'Instantly place your print in a living room, bedroom, or office mockup.',
+    title: 'Printed on premium metal',
+    description:
+      'Your restored image is dye-sublimated onto brushed aluminium — luminous, frameless, and built to last generations.',
     icon: 'eye',
   },
   {
     step: '04',
-    title: 'Order',
-    description: 'Choose finish, confirm size, and checkout. Delivered in 5–7 business days.',
+    title: 'Delivered ready to display',
+    description:
+      'Float-mounted and hand-finished in our Nairobi studio. On your wall within 5–7 business days.',
     icon: 'check',
   },
 ] as const

@@ -23,20 +23,21 @@ export function StudioPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-ink pt-28">
-      <div className="mx-auto max-w-7xl px-6 py-20 lg:px-10 lg:py-32">
+    <div className="min-h-screen bg-ink pt-24 sm:pt-28">
+      <div className="mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-24">
         <Reveal>
-          <SectionLabel>Studio</SectionLabel>
-          <h1 className="mt-6 font-display text-5xl leading-[1.05] text-cream md:text-6xl">
-            Your photo.{' '}
-            <span className="italic text-accent-light">Our craft.</span>
+          <SectionLabel>Upload</SectionLabel>
+          <h1 className="mt-5 font-display text-3xl leading-[1.08] text-cream sm:mt-6 sm:text-4xl md:text-5xl">
+            Send us your{' '}
+            <span className="italic text-accent-light">photograph.</span>
           </h1>
-          <p className="mt-6 max-w-lg text-cream/45">
-            Upload, crop, and preview your metal print before ordering.
+          <p className="mt-4 max-w-lg text-sm text-cream/45 sm:text-base">
+            Upload a scan or phone photo of your old image. We will assess,
+            restore, and print it on premium metallic aluminium.
           </p>
         </Reveal>
 
-        <div className="mt-16 flex gap-2">
+        <div className="mt-10 flex gap-1 overflow-x-auto no-scrollbar sm:mt-12 sm:gap-2">
           {(['upload', 'crop', 'preview'] as const).map((s, i) => (
             <button
               key={s}
@@ -63,7 +64,7 @@ export function StudioPage() {
           ))}
         </div>
 
-        <div className="mt-12 grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div className="mt-8 grid gap-8 lg:mt-12 lg:grid-cols-2 lg:gap-16">
           <Reveal index={1} className="relative">
             {step === 'upload' && (
               <label className="group flex aspect-[4/5] cursor-pointer flex-col items-center justify-center border border-dashed border-white/15 transition-all duration-500 hover:border-accent/40 hover:bg-white/[0.02]">
