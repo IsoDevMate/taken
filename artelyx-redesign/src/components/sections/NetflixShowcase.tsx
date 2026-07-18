@@ -67,27 +67,37 @@ export function NetflixShowcase() {
   }, [active, next])
 
   // ── Scroll-hijack ──────────────────────────────────────────────────────────
-  // When the section is ≥ 60 % in the viewport, intercept wheel events so
-  // that scrolling feels like "swiping" through slides rather than scrolling
-  // the page.  After the last slide a downward scroll lets the page continue.
+  // Track section visibility via IntersectionObserver so we only attach the
+  // non-passive wheel listener while the hero is actually fullscreen.
+  // This prevents preventDefault from bleeding into page-navigation transitions.
+  const isFullyVisible = useRef(false)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isFullyVisible.current = entry.intersectionRatio >= 0.9
+      },
+      { threshold: [0, 0.9, 1.0] }
+    )
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [])
+
   useEffect(() => {
     const section = sectionRef.current
     if (!section) return
 
     const handleWheel = (e: WheelEvent) => {
-      const rect = section.getBoundingClientRect()
-      const viewportHeight = window.innerHeight
-      const visible = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0)
-      const ratio = visible / viewportHeight
-
-      // Only hijack when section is mostly visible
-      if (ratio < 0.6) return
+      // Only hijack when section fills the viewport
+      if (!isFullyVisible.current) return
 
       const scrollingDown = e.deltaY > 0
 
-      // If already at last slide and scrolling down, let the page scroll
+      // At the boundary slides, let the page scroll through naturally
       if (scrollingDown && active === showcaseProducts.length - 1) return
-      // If already at first slide and scrolling up, let the page scroll
       if (!scrollingDown && active === 0) return
 
       e.preventDefault()

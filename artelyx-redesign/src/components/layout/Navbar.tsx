@@ -5,22 +5,18 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-const homeSections = [
-  { label: 'Gallery', href: '#gallery' },
-  { label: 'Process', href: '#process' },
-]
-
-const pageLinks = [
+const navLinks = [
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'Process', href: '/how-it-works' },
   { label: 'Why Us', href: '/why-us' },
+  { label: 'Pricing', href: '/pricing' },
   { label: 'Contact', href: '/contact' },
 ]
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState('')
   const location = useLocation()
-  const isHome = location.pathname === '/'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -28,11 +24,12 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Close mobile menu on route change
   useEffect(() => {
     setMobileOpen(false)
-    window.scrollTo(0, 0)
   }, [location.pathname])
 
+  // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
     return () => {
@@ -40,79 +37,26 @@ export function Navbar() {
     }
   }, [mobileOpen])
 
-  useEffect(() => {
-    if (!isHome) return
-
-    const sections = ['gallery', 'process']
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-        if (visible[0]?.target.id) {
-          setActiveSection(`#${visible[0].target.id}`)
-        }
-      },
-      { rootMargin: '-40% 0px -50% 0px', threshold: [0, 0.25, 0.5] }
+  const linkClass = (href: string) =>
+    cn(
+      'relative font-mono text-[11px] uppercase tracking-[0.18em] transition-all duration-300 px-3 py-1.5 rounded-md',
+      location.pathname === href
+        ? 'text-cream bg-white/[0.08] backdrop-blur-xl border border-white/10'
+        : 'text-cream/45 hover:text-cream hover:bg-white/[0.05] hover:border hover:border-white/10'
     )
-
-    sections.forEach((id) => {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    })
-
-    return () => observer.disconnect()
-  }, [isHome])
-
-  const navLinks = isHome
-    ? [...homeSections, ...pageLinks]
-    : [
-        { label: 'Home', href: '/' },
-        { label: 'Gallery', href: '/gallery' },
-        { label: 'Process', href: '/how-it-works' },
-        { label: 'Why Us', href: '/why-us' },
-        { label: 'Contact', href: '/contact' },
-      ]
-
-  const linkClass = (href: string) => {
-    const isActive = href.startsWith('#')
-      ? isHome && activeSection === href
-      : location.pathname === href
-
-    return cn(
-      'relative font-mono text-[11px] uppercase tracking-[0.18em] transition-all duration-300 px-3 py-1.5 rounded-md group',
-      isActive 
-        ? 'text-cream bg-white/[0.08] backdrop-blur-xl border border-white/10' 
-        : 'text-cream/45 hover:text-cream hover:bg-gradient-to-r hover:from-accent/5 hover:to-blue-500/5 hover:backdrop-blur-xl hover:border hover:border-white/10'
-    )
-  }
-
-  const renderLink = (link: { label: string; href: string }) => {
-    if (link.href.startsWith('#')) {
-      return (
-        <a key={link.href} href={link.href} className={linkClass(link.href)}>
-          {link.label}
-        </a>
-      )
-    }
-    return (
-      <Link key={link.href} to={link.href} className={linkClass(link.href)}>
-        {link.label}
-      </Link>
-    )
-  }
 
   return (
     <>
       <header
         className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
+          'fixed left-0 right-0 top-0 z-50 transition-all duration-500',
           scrolled || mobileOpen
             ? 'border-b border-white/5 bg-ink/90 py-3 backdrop-blur-2xl'
             : 'bg-transparent py-4 sm:py-5'
         )}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 sm:px-6 lg:px-10">
+          {/* Logo */}
           <Link to="/" className="group flex items-center gap-2.5 sm:gap-3">
             <div className="flex h-8 w-8 items-center justify-center border border-cream/30 sm:h-9 sm:w-9">
               <div className="h-2.5 w-2.5 rotate-45 border border-cream/50 sm:h-3 sm:w-3" />
@@ -122,8 +66,13 @@ export function Navbar() {
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-8 lg:flex">
-            {navLinks.map(renderLink)}
+          {/* Desktop nav */}
+          <nav className="hidden items-center gap-1 lg:flex">
+            {navLinks.map((link) => (
+              <Link key={link.href} to={link.href} className={linkClass(link.href)}>
+                {link.label}
+              </Link>
+            ))}
           </nav>
 
           <div className="hidden items-center gap-3 lg:flex">
@@ -132,6 +81,7 @@ export function Navbar() {
             </Button>
           </div>
 
+          {/* Mobile hamburger */}
           <button
             type="button"
             className="-mr-1 p-2 text-cream lg:hidden"
@@ -144,12 +94,14 @@ export function Navbar() {
         </div>
       </header>
 
+      {/* Mobile menu overlay */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             className="fixed inset-0 z-40 flex flex-col bg-ink/98 backdrop-blur-2xl lg:hidden"
           >
             <div className="flex flex-1 flex-col justify-center gap-7 px-8 pt-20">
@@ -160,22 +112,17 @@ export function Navbar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
                 >
-                  {link.href.startsWith('#') ? (
-                    <a
-                      href={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="block font-display text-3xl text-cream"
-                    >
-                      {link.label}
-                    </a>
-                  ) : (
-                    <Link
-                      to={link.href}
-                      className="block font-display text-3xl text-cream"
-                    >
-                      {link.label}
-                    </Link>
-                  )}
+                  <Link
+                    to={link.href}
+                    className={cn(
+                      'block font-display text-3xl transition-colors',
+                      location.pathname === link.href
+                        ? 'text-accent-light'
+                        : 'text-cream'
+                    )}
+                  >
+                    {link.label}
+                  </Link>
                 </motion.div>
               ))}
             </div>

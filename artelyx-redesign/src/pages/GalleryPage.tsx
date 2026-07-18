@@ -1,25 +1,17 @@
 import { Link } from 'react-router-dom'
 import { ArrowUpRight } from 'lucide-react'
 import { Gallery } from '@/components/sections/Gallery'
-import { SectionLabel } from '@/components/ui/SectionLabel'
+import { PageBanner } from '@/components/layout/PageBanner'
 import { Reveal } from '@/components/ui/Reveal'
 
 export function GalleryPage() {
   return (
-    <div className="bg-ink pt-28">
-      <div className="mx-auto max-w-7xl px-6 pb-16 pt-20 lg:px-10 lg:pb-24 lg:pt-32">
-        <Reveal>
-          <SectionLabel>Gallery</SectionLabel>
-          <h1 className="mt-6 max-w-3xl font-display text-5xl leading-[1.05] text-cream md:text-6xl lg:text-7xl">
-            Every wall tells a{' '}
-            <span className="italic text-accent-light">story.</span>
-          </h1>
-          <p className="mt-8 max-w-xl text-base leading-relaxed text-cream/45">
-            Browse finished pieces from our studio. Each print is a unique
-            transformation of a personal moment into gallery-quality metal art.
-          </p>
-        </Reveal>
-      </div>
+    <>
+      <PageBanner
+        title="Every wall tells a "
+        accent="story."
+        subtitle="Browse finished pieces from our studio. Each print is a unique transformation of a personal moment into gallery-quality metal art."
+      />
       <Gallery showHeader={false} />
       <div className="section-padding bg-charcoal">
         <Reveal className="mx-auto max-w-7xl px-6 text-center lg:px-10">
@@ -35,6 +27,6 @@ export function GalleryPage() {
           </Link>
         </Reveal>
       </div>
-    </div>
+    </>
   )
 }

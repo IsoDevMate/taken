@@ -1,14 +1,17 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { motion, useInView } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { showcaseProducts } from '@/lib/images'
-import { useIsMobile } from '@/hooks/useMediaQuery'
 
-gsap.registerPlugin(ScrollTrigger)
-
+/**
+ * Showcase — horizontal scroll on desktop, vertical grid on mobile.
+ *
+ * Uses native CSS overflow-x scroll + scroll-snap instead of GSAP ScrollTrigger
+ * pinning. This keeps the section self-contained and never mutates body styles,
+ * so navigating away is always clean.
+ */
 function ShowcaseHeader() {
   return (
     <>
@@ -33,125 +36,84 @@ function ShowcaseHeader() {
   )
 }
 
-function ProductCard({
-  product,
-  index,
-  className,
-}: {
-  product: (typeof showcaseProducts)[number]
-  index: number
-  className?: string
-}) {
-  return (
-    <div className={className}>
-      <div className="group relative aspect-[3/4] overflow-hidden md:aspect-auto md:h-[70vh]">
-        <img
-          src={product.src}
-          alt={product.title}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent md:opacity-0 md:transition-opacity md:duration-500 md:group-hover:opacity-100" />
-        <div className="absolute bottom-0 left-0 right-0 p-4 md:translate-y-4 md:p-8 md:opacity-0 md:transition-all md:duration-500 md:group-hover:translate-y-0 md:group-hover:opacity-100">
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent-light">
-            0{index + 1}
-          </span>
-          <h3 className="mt-1 font-display text-lg text-cream md:text-2xl">
-            {product.title}
-          </h3>
-          <p className="mt-0.5 text-xs text-cream/50 md:text-sm">{product.size}</p>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export function Showcase() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const trackRef = useRef<HTMLDivElement>(null)
-  const isMobile = useIsMobile()
-
-  useEffect(() => {
-    if (isMobile) return
-
-    const section = sectionRef.current
-    const track = trackRef.current
-    if (!section || !track) return
-
-    const ctx = gsap.context(() => {
-      const scrollWidth = track.scrollWidth - window.innerWidth
-
-      gsap.to(track, {
-        x: -scrollWidth,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end: () => `+=${scrollWidth}`,
-          pin: true,
-          scrub: 1,
-          invalidateOnRefresh: true,
-        },
-      })
-    }, section)
-
-    return () => ctx.revert()
-  }, [isMobile])
-
-  if (isMobile) {
-    return (
-      <section id="gallery" className="bg-charcoal py-20 md:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <ShowcaseHeader />
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-4">
-            {showcaseProducts.slice(0, 4).map((product, i) => (
-              <ProductCard key={product.title} product={product} index={i} />
-            ))}
-          </div>
-        </div>
-      </section>
-    )
-  }
+  const ref = useRef<HTMLElement>(null)
+  const isInView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section
-      ref={sectionRef}
-      id="gallery"
-      className="relative hidden overflow-hidden bg-charcoal lg:block"
-    >
-      <div className="absolute left-0 top-0 z-10 flex h-full w-1/3 items-center bg-gradient-to-r from-charcoal via-charcoal/90 to-transparent px-6 lg:px-16">
-        <div>
-          <ShowcaseHeader />
+    <section ref={ref} id="showcase" className="bg-charcoal py-20 md:py-32">
+      {/* ── Mobile / tablet: standard grid ─────────────────────────────── */}
+      <div className="mx-auto max-w-7xl px-6 lg:hidden lg:px-10">
+        <ShowcaseHeader />
+        <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-4">
+          {showcaseProducts.slice(0, 4).map((product, i) => (
+            <motion.div
+              key={product.title}
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative aspect-[3/4] overflow-hidden"
+            >
+              <img
+                src={product.src}
+                alt={product.title}
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="absolute bottom-0 left-0 right-0 translate-y-full p-4 transition-transform duration-500 group-hover:translate-y-0">
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent-light">
+                  0{i + 1}
+                </span>
+                <h3 className="mt-0.5 font-display text-lg text-cream">{product.title}</h3>
+                <p className="text-xs text-cream/50">{product.size}</p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
 
-      <div
-        ref={trackRef}
-        className="flex h-screen items-center gap-6 pl-[35vw] pr-12"
-      >
-        {showcaseProducts.map((product, i) => (
-          <div
-            key={product.title}
-            className="group relative h-[70vh] w-[45vw] max-w-xl shrink-0 overflow-hidden"
-          >
-            <img
-              src={product.src}
-              alt={product.title}
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-            <div className="absolute bottom-0 left-0 right-0 translate-y-4 p-8 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent-light">
-                0{i + 1}
-              </span>
-              <h3 className="mt-1 font-display text-2xl text-cream">
-                {product.title}
-              </h3>
-              <p className="mt-1 text-sm text-cream/50">{product.size}</p>
-            </div>
-          </div>
-        ))}
+      {/* ── Desktop: horizontal drag-scroll with snap ────────────────────── */}
+      <div className="hidden lg:block">
+        <div className="mx-auto max-w-7xl px-6 lg:px-16">
+          <ShowcaseHeader />
+        </div>
+
+        {/* Scrollable track — no pinning, just overflow-x scroll */}
+        <div
+          className="mt-10 flex gap-5 overflow-x-auto px-6 pb-6 lg:px-16"
+          style={{
+            scrollSnapType: 'x mandatory',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+          }}
+        >
+          {showcaseProducts.map((product, i) => (
+            <motion.div
+              key={product.title}
+              initial={{ opacity: 0, x: 40 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ delay: i * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative h-[65vh] w-[38vw] max-w-lg shrink-0 overflow-hidden"
+              style={{ scrollSnapAlign: 'start' }}
+            >
+              <img
+                src={product.src}
+                alt={product.title}
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="absolute bottom-0 left-0 right-0 translate-y-4 p-8 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent-light">
+                  0{i + 1}
+                </span>
+                <h3 className="mt-1 font-display text-2xl text-cream">{product.title}</h3>
+                <p className="mt-1 text-sm text-cream/50">{product.size}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   )

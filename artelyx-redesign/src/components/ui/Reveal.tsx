@@ -2,13 +2,13 @@ import { motion, type Variants } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
 const variants: Variants = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 30 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: {
       delay: i * 0.1,
-      duration: 0.9,
+      duration: 0.7,
       ease: [0.22, 1, 0.36, 1],
     },
   }),
@@ -34,7 +34,11 @@ export function Reveal({
       custom={index}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: '-80px' }}
+      // amount: 0 means trigger as soon as any part of the element enters the viewport.
+      // once: true so it only animates in once, not on every scroll.
+      // No negative margin — negative margins cause elements at the top of a freshly
+      // navigated page to be considered "out of view" and never animate in.
+      viewport={{ once: true, amount: 0 }}
       variants={variants}
       className={cn(className)}
     >

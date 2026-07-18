@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
@@ -12,8 +12,11 @@ export function RootLayout() {
   const isMobile = useIsMobile()
   const showSpotlight = location.pathname === '/' && !isMobile
 
-  useEffect(() => {
+  // useLayoutEffect fires synchronously after DOM mutations but before paint,
+  // so scroll is reset before Reveal/whileInView components measure their position.
+  useLayoutEffect(() => {
     window.scrollTo(0, 0)
+    document.documentElement.scrollTop = 0
   }, [location.pathname])
 
   return (
