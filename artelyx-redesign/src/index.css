@@ -2,7 +2,7 @@
 
 @theme {
   --font-display: "Instrument Serif", Georgia, serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-sans: "Geist", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
   /* Warm dark spectrum — sections flow without jarring jumps */
@@ -90,6 +90,44 @@
 
   .glass-strong {
     @apply border border-white/15 bg-white/[0.06] backdrop-blur-2xl;
+  }
+
+  .glass-hover {
+    @apply transition-all duration-300 hover:bg-gradient-to-br hover:from-white/[0.08] hover:via-blue-500/[0.02] hover:to-accent/[0.06] hover:backdrop-blur-2xl hover:border-white/20;
+  }
+
+  .glass-mirror {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glass-mirror::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent,
+      rgba(255,255,255,0.1),
+      transparent
+    );
+    transform: rotate(45deg);
+    transition: opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .glass-mirror:hover::before {
+    opacity: 1;
+    animation: mirror-shine 1.5s ease-in-out;
+  }
+
+  @keyframes mirror-shine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
   }
 
   .gradient-border {

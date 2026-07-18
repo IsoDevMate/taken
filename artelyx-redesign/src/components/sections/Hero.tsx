@@ -1,33 +1,29 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowRight, Upload } from 'lucide-react'
-import gsap from 'gsap'
 import { Button } from '@/components/ui/button'
-import { SectionLabel } from '@/components/ui/SectionLabel'
 import { images } from '@/lib/images'
-import { useIsMobile, usePrefersReducedMotion } from '@/hooks/useMediaQuery'
+import { usePrefersReducedMotion } from '@/hooks/useMediaQuery'
 
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null)
-  const imageRef = useRef<HTMLDivElement>(null)
-  const isMobile = useIsMobile()
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [videoReady, setVideoReady] = useState(false)
   const reducedMotion = usePrefersReducedMotion()
 
   useEffect(() => {
-    if (isMobile || reducedMotion) return
+    const video = videoRef.current
+    if (!video || reducedMotion) return
 
-    const ctx = gsap.context(() => {
-      gsap.to(imageRef.current, {
-        scale: 1.06,
-        duration: 20,
-        ease: 'none',
-        repeat: -1,
-        yoyo: true,
-      })
-    }, heroRef)
-    return () => ctx.revert()
-  }, [isMobile, reducedMotion])
+    const handleCanPlay = () => setVideoReady(true)
+    video.addEventListener('canplaythrough', handleCanPlay)
+
+    // If already ready (cached)
+    if (video.readyState >= 3) setVideoReady(true)
+
+    return () => video.removeEventListener('canplaythrough', handleCanPlay)
+  }, [reducedMotion])
 
   return (
     <section
@@ -35,59 +31,68 @@ export function Hero() {
       id="hero"
       className="relative flex min-h-[100dvh] items-end overflow-hidden bg-ink"
     >
+      {/* Background media — video with image fallback */}
       <div className="absolute inset-0">
-        <div
-          ref={imageRef}
-          className="absolute inset-0 scale-105 motion-reduce:scale-100"
-        >
-          <img
-            src={images.hero}
-            alt="Restored photograph printed as premium metallic art"
-            className="h-full w-full object-cover object-center"
-            fetchPriority="high"
+        {/* Fallback image — always rendered, hidden once video is ready */}
+        <img
+          src={images.hero}
+          alt=""
+          aria-hidden="true"
+          fetchPriority="high"
+          className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 ${
+            videoReady && !reducedMotion ? 'opacity-0' : 'opacity-100'
+          }`}
+        />
+
+        {/* Ambient video — muted, autoplay, no controls */}
+        {!reducedMotion && (
+          <video
+            ref={videoRef}
+            src="/video/hero.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 ${
+              videoReady ? 'opacity-100' : 'opacity-0'
+            }`}
           />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/40" />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/30 to-transparent" />
+        )}
+
+        {/* Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/25 to-transparent" />
       </div>
 
+      {/* Content */}
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-10 lg:pb-32 lg:pt-32">
-        <div className="max-w-2xl lg:max-w-3xl">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.7 }}
-          >
-            <SectionLabel className="mb-4 sm:mb-6">
-              Photo Restoration & Metallic Prints
-            </SectionLabel>
-          </motion.div>
-
+        <div className="max-w-xl">
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="font-display text-[2rem] leading-[1.08] text-cream sm:text-5xl md:text-6xl lg:text-7xl"
+            transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            className="font-display text-[2.4rem] leading-[1.06] text-cream sm:text-5xl md:text-6xl lg:text-7xl"
           >
-            Some memories deserve a{' '}
-            <span className="italic text-accent-light">second life.</span>
+            Memories,
+            <br />
+            <span className="italic text-accent-light">on metal.</span>
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.55, duration: 0.7 }}
-            className="mt-5 max-w-md text-base leading-relaxed text-cream/55 sm:mt-6 sm:text-lg"
+            transition={{ delay: 0.42, duration: 0.7 }}
+            className="mt-4 text-sm leading-relaxed text-cream/50 sm:text-base"
           >
-            Turn faded memories into timeless metallic art. We restore every
-            detail, then print on premium aluminium with a luminous finish.
+            Photo restoration &amp; premium aluminium prints — Nairobi.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.7 }}
-            className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
+            transition={{ delay: 0.58, duration: 0.7 }}
+            className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4"
           >
             <Button variant="primary" size="lg" className="group w-full sm:w-auto" asChild>
               <Link to="/studio">
@@ -97,7 +102,7 @@ export function Hero() {
               </Link>
             </Button>
             <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>
-              <a href="#before-after">See the Transformation</a>
+              <a href="#before-after">See the result</a>
             </Button>
           </motion.div>
         </div>

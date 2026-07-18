@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Upload, Crop, Eye, ArrowRight, ImagePlus } from 'lucide-react'
@@ -17,10 +17,24 @@ export function StudioPage() {
   const handleUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    const url = URL.createObjectURL(file)
-    setPreview(url)
-    setStep('crop')
+    
+    try {
+      const url = URL.createObjectURL(file)
+      setPreview(url)
+      setStep('crop')
+    } catch (error) {
+      console.error('Error creating object URL:', error)
+    }
   }, [])
+
+  // Cleanup object URL when component unmounts or preview changes
+  useEffect(() => {
+    return () => {
+      if (preview && preview.startsWith('blob:')) {
+        URL.revokeObjectURL(preview)
+      }
+    }
+  }, [preview])
 
   return (
     <div className="min-h-screen bg-ink pt-24 sm:pt-28">
@@ -44,9 +58,9 @@ export function StudioPage() {
               type="button"
               onClick={() => preview && setStep(s)}
               className={cn(
-                'relative px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-all duration-500',
+                'relative px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.2em] transition-all duration-500 glass-hover',
                 step === s
-                  ? 'text-cream'
+                  ? 'text-cream glass-strong'
                   : 'text-cream/30 hover:text-cream/60'
               )}
             >
@@ -67,14 +81,14 @@ export function StudioPage() {
         <div className="mt-8 grid gap-8 lg:mt-12 lg:grid-cols-2 lg:gap-16">
           <Reveal index={1} className="relative">
             {step === 'upload' && (
-              <label className="group flex aspect-[4/5] cursor-pointer flex-col items-center justify-center border border-dashed border-white/15 transition-all duration-500 hover:border-accent/40 hover:bg-white/[0.02]">
+              <label className="group flex aspect-[4/5] cursor-pointer flex-col items-center justify-center border border-dashed border-white/15 glass-hover transition-all duration-500 hover:border-accent/40">
                 <input
                   type="file"
                   accept="image/*"
                   className="hidden"
                   onChange={handleUpload}
                 />
-                <div className="flex h-16 w-16 items-center justify-center border border-white/10 transition-colors group-hover:border-accent/40">
+                <div className="flex h-16 w-16 items-center justify-center border border-white/10 glass-mirror transition-colors group-hover:border-accent/40">
                   <ImagePlus className="h-6 w-6 text-cream/40 group-hover:text-accent-light" />
                 </div>
                 <p className="mt-6 font-display text-2xl text-cream">
@@ -87,7 +101,7 @@ export function StudioPage() {
             )}
 
             {step === 'crop' && preview && (
-              <div className="relative aspect-[4/5] overflow-hidden bg-graphite">
+              <div className="relative aspect-[4/5] overflow-hidden bg-graphite glass-hover">
                 <img
                   src={preview}
                   alt="Your upload"
@@ -98,7 +112,7 @@ export function StudioPage() {
             )}
 
             {step === 'preview' && (
-              <div className="relative aspect-[4/5] overflow-hidden">
+              <div className="relative aspect-[4/5] overflow-hidden glass-hover">
                 <img
                   src={preview ?? images.hero}
                   alt="Room preview"
@@ -137,7 +151,7 @@ export function StudioPage() {
                   image will appear on metal.
                 </p>
                 <Button
-                  className="mt-8 w-fit"
+                  className="mt-8 w-fit glass-hover"
                   onClick={() => setStep('preview')}
                 >
                   Preview in Room
@@ -157,13 +171,13 @@ export function StudioPage() {
                   committing to a size and finish.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
-                  <Button variant="primary" asChild>
+                  <Button variant="primary" className="glass-mirror" asChild>
                     <Link to="/pricing">
                       Choose Size & Order
                       <ArrowRight className="h-4 w-4" />
                     </Link>
                   </Button>
-                  <Button variant="outline" onClick={() => setStep('crop')}>
+                  <Button variant="outline" className="glass-hover" onClick={() => setStep('crop')}>
                     Adjust Crop
                   </Button>
                 </div>

@@ -6,14 +6,11 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 const homeSections = [
-  { label: 'Transformation', href: '#before-after' },
-  { label: 'Process', href: '#process' },
   { label: 'Gallery', href: '#gallery' },
-  { label: 'FAQ', href: '#faq' },
+  { label: 'Process', href: '#process' },
 ]
 
 const pageLinks = [
-  { label: 'Pricing', href: '/pricing' },
   { label: 'Contact', href: '/contact' },
 ]
 
@@ -45,7 +42,7 @@ export function Navbar() {
   useEffect(() => {
     if (!isHome) return
 
-    const sections = ['before-after', 'process', 'gallery', 'about', 'faq']
+    const sections = ['gallery', 'process']
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
@@ -81,8 +78,10 @@ export function Navbar() {
       : location.pathname === href
 
     return cn(
-      'font-mono text-[11px] uppercase tracking-[0.18em] transition-colors duration-300',
-      isActive ? 'text-cream' : 'text-cream/45 hover:text-cream'
+      'relative font-mono text-[11px] uppercase tracking-[0.18em] transition-all duration-300 px-3 py-1.5 rounded-md group',
+      isActive 
+        ? 'text-cream bg-white/[0.08] backdrop-blur-xl border border-white/10' 
+        : 'text-cream/45 hover:text-cream hover:bg-gradient-to-r hover:from-accent/5 hover:to-blue-500/5 hover:backdrop-blur-xl hover:border hover:border-white/10'
     )
   }
 

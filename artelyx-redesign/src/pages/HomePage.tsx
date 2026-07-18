@@ -2,7 +2,7 @@ import { Hero } from '@/components/sections/Hero'
 import { BeforeAfter } from '@/components/sections/BeforeAfter'
 import { WhyMetallic } from '@/components/sections/WhyMetallic'
 import { ProcessTeaser } from '@/components/sections/ProcessTeaser'
-import { Showcase } from '@/components/sections/Showcase'
+import { NetflixShowcase } from '@/components/sections/NetflixShowcase'
 import { TeamTrust } from '@/components/sections/TeamTrust'
 import { Testimonials } from '@/components/sections/Testimonials'
 import { FAQ } from '@/components/sections/FAQ'
@@ -15,7 +15,7 @@ export function HomePage() {
       <BeforeAfter />
       <WhyMetallic />
       <ProcessTeaser />
-      <Showcase />
+      <NetflixShowcase />
       <TeamTrust />
       <Testimonials />
       <FAQ />

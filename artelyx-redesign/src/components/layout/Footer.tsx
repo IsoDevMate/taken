@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, MessageCircle } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 
 function InstagramIcon({ className }: { className?: string }) {
@@ -42,10 +43,10 @@ export function Footer() {
             </h4>
             <ul className="mt-4 space-y-3">
               {[
-                { label: 'Transformation', href: '/#before-after' },
-                { label: 'Process', href: '/#process' },
                 { label: 'Gallery', href: '/gallery' },
+                { label: 'Process', href: '/how-it-works' },
                 { label: 'Pricing', href: '/pricing' },
+                { label: 'Contact', href: '/contact' },
               ].map((link) => (
                 <li key={link.label}>
                   <Link
@@ -128,6 +129,24 @@ export function Footer() {
             Crafted with precision in Kenya
           </p>
         </div>
+      </div>
+
+      {/* Animated ARTELYX at bottom */}
+      <div className="relative overflow-hidden border-t border-white/5 bg-graphite py-8">
+        <motion.div
+          initial={{ x: "100%" }}
+          animate={{ x: "-100%" }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          className="whitespace-nowrap"
+        >
+          <span className="font-display text-6xl tracking-[0.3em] text-transparent bg-gradient-to-r from-accent/20 via-cream/10 to-accent/20 bg-clip-text md:text-8xl lg:text-9xl">
+            ARTELYX STUDIOS — ARTELYX STUDIOS — ARTELYX STUDIOS — ARTELYX STUDIOS —{' '}
+          </span>
+        </motion.div>
       </div>
     </footer>
   )

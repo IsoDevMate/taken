@@ -18,18 +18,53 @@ export function BeforeAfter() {
     setSliderPos((x / rect.width) * 100)
   }, [])
 
-  const handlePointerDown = (e: React.PointerEvent) => {
+  const handleStart = useCallback((clientX: number) => {
     setIsDragging(true)
+    updatePosition(clientX)
+  }, [updatePosition])
+
+  const handleMove = useCallback((clientX: number) => {
+    if (!isDragging) return
+    updatePosition(clientX)
+  }, [isDragging, updatePosition])
+
+  const handleEnd = useCallback(() => {
+    setIsDragging(false)
+  }, [])
+
+  // Mouse events
+  const handlePointerDown = (e: React.PointerEvent) => {
+    e.preventDefault()
     ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
-    updatePosition(e.clientX)
+    handleStart(e.clientX)
   }
 
   const handlePointerMove = (e: React.PointerEvent) => {
-    if (!isDragging) return
-    updatePosition(e.clientX)
+    e.preventDefault()
+    handleMove(e.clientX)
   }
 
-  const handlePointerUp = () => setIsDragging(false)
+  const handlePointerUp = (e: React.PointerEvent) => {
+    e.preventDefault()
+    ;(e.target as HTMLElement).releasePointerCapture?.(e.pointerId)
+    handleEnd()
+  }
+
+  // Touch events for better mobile support
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault()
+    handleStart(e.touches[0].clientX)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    e.preventDefault()
+    handleMove(e.touches[0].clientX)
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    e.preventDefault()
+    handleEnd()
+  }
 
   return (
     <section ref={ref} id="before-after" className="relative overflow-hidden bg-graphite py-20 md:section-padding">
@@ -78,6 +113,10 @@ export function BeforeAfter() {
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerUp}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            style={{ touchAction: 'none' }}
           >
             <img
               src={images.studio5}
@@ -103,7 +142,7 @@ export function BeforeAfter() {
               className="absolute top-0 bottom-0 z-10 w-0.5 bg-cream shadow-lg"
               style={{ left: `${sliderPos}%` }}
             >
-              <div className="absolute top-1/2 left-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center border-2 border-cream bg-ink shadow-xl md:h-10 md:w-10">
+              <div className="absolute top-1/2 left-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center border-2 border-cream bg-ink shadow-xl md:h-10 md:w-10 transition-all duration-200 hover:scale-110 hover:bg-accent/10">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path d="M5 4L1 8L5 12" stroke="currentColor" strokeWidth="1.5" className="text-cream" />
                   <path d="M11 4L15 8L11 12" stroke="currentColor" strokeWidth="1.5" className="text-cream" />
