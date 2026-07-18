@@ -2,11 +2,11 @@ import { useState, useCallback, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Upload, Crop, Eye, ArrowRight, ImagePlus } from 'lucide-react'
-import { SectionLabel } from '@/components/ui/SectionLabel'
 import { Reveal } from '@/components/ui/Reveal'
 import { Button } from '@/components/ui/button'
 import { images } from '@/lib/images'
 import { cn } from '@/lib/utils'
+import { PageBanner } from '@/components/layout/PageBanner'
 
 type StudioStep = 'upload' | 'crop' | 'preview'
 
@@ -37,19 +37,14 @@ export function StudioPage() {
   }, [preview])
 
   return (
-    <div className="min-h-screen bg-ink pt-24 sm:pt-28">
-      <div className="mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-24">
-        <Reveal>
-          <SectionLabel>Upload</SectionLabel>
-          <h1 className="mt-5 font-display text-3xl leading-[1.08] text-cream sm:mt-6 sm:text-4xl md:text-5xl">
-            Send us your{' '}
-            <span className="italic text-accent-light">photograph.</span>
-          </h1>
-          <p className="mt-4 max-w-lg text-sm text-cream/45 sm:text-base">
-            Upload a scan or phone photo of your old image. We will assess,
-            restore, and print it on premium metallic aluminium.
-          </p>
-        </Reveal>
+    <>
+      <PageBanner
+        title="Send us your "
+        accent="photograph."
+        subtitle="Upload a scan or phone photo of your old image. We'll assess, restore, and print it on premium metallic aluminium."
+      />
+      <div className="bg-ink">
+        <div className="mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-24">
 
         <div className="mt-10 flex gap-1 overflow-x-auto no-scrollbar sm:mt-12 sm:gap-2">
           {(['upload', 'crop', 'preview'] as const).map((s, i) => (
@@ -185,7 +180,8 @@ export function StudioPage() {
             )}
           </Reveal>
         </div>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

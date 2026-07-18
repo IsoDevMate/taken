@@ -11,6 +11,7 @@ const homeSections = [
 ]
 
 const pageLinks = [
+  { label: 'Why Us', href: '/why-us' },
   { label: 'Contact', href: '/contact' },
 ]
 
@@ -69,6 +70,7 @@ export function Navbar() {
         { label: 'Home', href: '/' },
         { label: 'Gallery', href: '/gallery' },
         { label: 'Process', href: '/how-it-works' },
+        { label: 'Why Us', href: '/why-us' },
         { label: 'Contact', href: '/contact' },
       ]
 

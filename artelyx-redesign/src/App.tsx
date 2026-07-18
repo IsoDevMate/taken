@@ -10,16 +10,14 @@ import { MaterialsPage } from '@/pages/MaterialsPage'
 import { PricingPage } from '@/pages/PricingPage'
 import { AccountPage } from '@/pages/AccountPage'
 import { ContactPage } from '@/pages/ContactPage'
+import { WhyUsPage } from '@/pages/WhyUsPage'
 import { LoadingAnimation } from '@/components/ui/LoadingAnimation'
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Preload critical resources
-    const preloadImages: string[] = [
-      // Add your key images here
-    ]
+    const preloadImages: string[] = []
     
     Promise.all(
       preloadImages.map(src => {
@@ -31,7 +29,6 @@ function App() {
         })
       })
     ).then(() => {
-      // Minimum loading time for smooth experience
       setTimeout(() => {
         setIsLoading(false)
       }, 2000)
@@ -58,6 +55,7 @@ function App() {
               <Route path="pricing" element={<PricingPage />} />
               <Route path="account" element={<AccountPage />} />
               <Route path="contact" element={<ContactPage />} />
+              <Route path="why-us" element={<WhyUsPage />} />
             </Route>
           </Routes>
         </BrowserRouter>
