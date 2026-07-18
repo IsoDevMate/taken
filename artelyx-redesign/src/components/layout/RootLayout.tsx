@@ -12,11 +12,14 @@ export function RootLayout() {
   const isMobile = useIsMobile()
   const showSpotlight = location.pathname === '/' && !isMobile
 
-  // useLayoutEffect fires synchronously after DOM mutations but before paint,
-  // so scroll is reset before Reveal/whileInView components measure their position.
   useLayoutEffect(() => {
-    window.scrollTo(0, 0)
-    document.documentElement.scrollTop = 0
+    // Small timeout lets GSAP's ctx.revert() fully remove pin spacers from
+    // the body before we reset scroll — prevents the blank page flash.
+    const t = setTimeout(() => {
+      window.scrollTo(0, 0)
+      document.documentElement.scrollTop = 0
+    }, 50)
+    return () => clearTimeout(t)
   }, [location.pathname])
 
   return (
